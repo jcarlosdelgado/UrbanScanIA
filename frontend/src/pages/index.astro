@@ -1,0 +1,594 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>UrbanScanIA | Advanced Infrastructure Intelligence</title>
+		<meta
+			name="description"
+			content="AI-powered analysis of urban satellite imagery with state-of-the-art neural networks."
+		/>
+	</head>
+	<body>
+		<div class="app-background"></div>
+		<div class="mesh-overlay"></div>
+
+		<main>
+			<header class="animate-in">
+				<span class="tagline">Neural Insight Processor v2.0</span>
+				<h1>UrbanScanIA</h1>
+			</header>
+
+			<div
+				class="dashboard-grid animate-in"
+				style="animation-delay: 0.2s;"
+			>
+				<!-- Primary Analysis Module -->
+				<div class="premium-panel">
+					<div id="upload-module" style="text-align: center;">
+						<div class="drop-zone" id="drop-zone">
+							<input
+								type="file"
+								id="file-input"
+								accept="image/*"
+								style="display: none;"
+							/>
+							<div class="icon-box">
+								<svg
+									width="32"
+									height="32"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<path
+										d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+									></path>
+									<polyline points="17 8 12 3 7 8"></polyline>
+									<line x1="12" y1="3" x2="12" y2="15"></line>
+								</svg>
+							</div>
+							<h2
+								style="font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 700;"
+							>
+								Nucleo de Ingesta
+							</h2>
+							<p style="color: var(--text-dim);">
+								Arrastre archivos multiespectrales o seleccione
+								sistema
+							</p>
+						</div>
+
+						<div
+							id="file-preview-area"
+							style="display: none; margin-top: 3rem; text-align: left;"
+						>
+							<div
+								style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;"
+							>
+								<img
+									id="image-preview"
+									alt="Vista previa del satélite"
+									style="width: 280px; height: 180px; border-radius: 20px; object-fit: cover; border: 1px solid var(--glass-border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);"
+								/>
+								<div style="flex: 1; min-width: 250px;">
+									<div
+										style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;"
+									>
+										Propiedades Metadatos
+									</div>
+									<h3
+										id="file-name-meta"
+										style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary);"
+									>
+										-
+									</h3>
+									<div
+										id="file-size-meta"
+										style="font-size: 0.9rem; color: #fff; opacity: 0.7;"
+									>
+										-
+									</div>
+									<button
+										id="analyze-trigger"
+										class="btn-action"
+										>Ejecutar Escáneo Neural</button
+									>
+								</div>
+							</div>
+						</div>
+
+						<div
+							id="loading-area"
+							style="display: none; margin-top: 3rem;"
+						>
+							<div
+								id="status-text-live"
+								style="font-size: 1.1rem; color: var(--primary); font-weight: 600; letter-spacing: 0.05em; margin-bottom: 1rem;"
+							>
+								Inicializando Red Convolucional...
+							</div>
+							<div class="loading-bar" style="display: block;">
+								<div class="loading-progress"></div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Analysis Results Dashboard -->
+					<div id="results-dashboard" class="results-container">
+						<div class="stat-card" style="grid-column: span 2;">
+							<span class="stat-title"
+								>Infraestructura Identificada</span
+							>
+							<div
+								id="res-prediction-big"
+								class="stat-big-value"
+								style="font-size: clamp(2rem, 5vw, 4rem);"
+							>
+								-
+							</div>
+						</div>
+
+						<div class="stat-card">
+							<span class="stat-title">Índice Sostenibilidad</span
+							>
+							<div
+								class="sustainability-graph"
+								style="margin-top: 1rem;"
+							>
+								<svg
+									class="sustainability-svg"
+									width="160"
+									height="160"
+								>
+									<circle
+										class="svg-bg"
+										cx="80"
+										cy="80"
+										r="70"></circle>
+									<circle
+										id="progress-indicator"
+										class="svg-progress"
+										cx="80"
+										cy="80"
+										r="70"></circle>
+								</svg>
+								<div
+									id="sustainability-percent"
+									class="graph-value"
+								>
+									0%
+								</div>
+							</div>
+						</div>
+
+						<div class="stat-card">
+							<span class="stat-title">Nivel de Confianza</span>
+							<div id="res-confidence-val" class="stat-big-value">
+								-
+							</div>
+							<div
+								id="res-category-lbl"
+								style="font-size: 0.75rem; margin-top: 1rem; color: var(--primary); text-transform: uppercase;"
+							>
+								-
+							</div>
+						</div>
+
+						<div
+							class="stat-card"
+							style="grid-column: span 2; text-align: left;"
+						>
+							<span class="stat-title"
+								>Análisis de Sistema Experto</span
+							>
+							<p
+								id="res-insight-txt"
+								style="margin: 1.5rem 0; line-height: 1.8; color: #fff; opacity: 0.8; font-weight: 300;"
+							>
+								-
+							</p>
+							<div
+								style="background: rgba(0,242,254,0.05); padding: 1.5rem; border-radius: 20px; border-left: 4px solid var(--accent);"
+							>
+								<span
+									class="stat-title"
+									style="color: var(--accent);"
+									>Recomendación Técnica</span
+								>
+								<p
+									id="res-recommend-txt"
+									style="margin-top: 0.5rem; font-size: 0.95rem; line-height: 1.6;"
+								>
+									-
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<div
+						id="metadata-footer"
+						style="display: none; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim);"
+					>
+						<span id="meta-engine">ResNet50v2 Architecture</span>
+						<span id="meta-latency">-</span>
+					</div>
+				</div>
+
+				<!-- Lateral Dashboard Side -->
+				<div
+					class="history-module animate-in"
+					style="animation-delay: 0.4s;"
+				>
+					<h3
+						style="font-size: 1.5rem; margin-bottom: 2rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem;"
+					>
+						<svg
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="var(--primary)"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							><path d="M12 8v4l3 3"></path><circle
+								cx="12"
+								cy="12"
+								r="9"></circle></svg
+						>
+						Historial Operativo
+					</h3>
+					<div id="analysis-history-root" class="history-container">
+						<div
+							style="text-align: center; padding: 4rem 2rem; color: var(--text-dim); border: 1px dashed var(--glass-border); border-radius: 32px;"
+						>
+							<p>
+								No se han registrado sesiones de escaneo
+								activas.
+							</p>
+						</div>
+					</div>
+
+					<div
+						style="margin-top: 3rem; background: linear-gradient(135deg, rgba(0,242,254,0.05), rgba(123,97,255,0.05)); padding: 2rem; border-radius: 32px; border: 1px solid var(--glass-border);"
+					>
+						<h4
+							style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--primary); margin-bottom: 1.5rem;"
+						>
+							Estado de Telemetría
+						</h4>
+						<div
+							style="display: flex; flex-direction: column; gap: 1rem;"
+						>
+							<div
+								style="display: flex; justify-content: space-between; align-items: center;"
+							>
+								<span style="font-size: 0.9rem; opacity: 0.7;"
+									>Red Neuronal</span
+								>
+								<span
+									style="color: var(--success); font-size: 0.75rem; font-weight: 700;"
+									>ONLINE</span
+								>
+							</div>
+							<div
+								style="display: flex; justify-content: space-between; align-items: center;"
+							>
+								<span style="font-size: 0.9rem; opacity: 0.7;"
+									>Análisis Multiespectral</span
+								>
+								<span
+									style="color: var(--success); font-size: 0.75rem; font-weight: 700;"
+									>ACTIVE</span
+								>
+							</div>
+							<div
+								style="display: flex; justify-content: space-between; align-items: center;"
+							>
+								<span style="font-size: 0.9rem; opacity: 0.7;"
+									>Base de Datos EuroSAT</span
+								>
+								<span
+									style="color: var(--primary); font-size: 0.75rem; font-weight: 700;"
+									>CONNECTED</span
+								>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<section
+				class="animate-in"
+				style="animation-delay: 0.6s; margin-top: 4rem;"
+			>
+				<div
+					style="border-left: 2px solid var(--primary); padding-left: 3rem; max-width: 900px;"
+				>
+					<h2
+						style="font-size: 2rem; margin-bottom: 1.5rem; letter-spacing: -0.02em;"
+					>
+						Especificaciones de Procesamiento
+					</h2>
+					<p
+						style="color: var(--text-dim); line-height: 2; font-size: 1.1rem; font-weight: 300;"
+					>
+						UrbanScanIA opera como un sistema de percepción remota
+						de precisión militar. Cada imagen es descompuesta en
+						matrices de vectores que nuestra red neuronal procesa
+						para identificar patrones de uso de suelo con una
+						divergencia inferior al 0.5%. El sistema está optimizado
+						para planeamiento urbano sostenible y monitorización de
+						activos críticos.
+					</p>
+					<div
+						style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;"
+					>
+						<span
+							style="background: rgba(255,255,255,0.05); padding: 0.5rem 1.25rem; border-radius: 100px; font-size: 0.8rem; border: 1px solid var(--glass-border);"
+							>Sentinel-2 Optimizado</span
+						>
+						<span
+							style="background: rgba(255,255,255,0.05); padding: 0.5rem 1.25rem; border-radius: 100px; font-size: 0.8rem; border: 1px solid var(--glass-border);"
+							>Topografía AI</span
+						>
+						<span
+							style="background: rgba(255,255,255,0.05); padding: 0.5rem 1.25rem; border-radius: 100px; font-size: 0.8rem; border: 1px solid var(--glass-border);"
+							>Espectro Dinámico</span
+						>
+					</div>
+				</div>
+			</section>
+
+			<footer
+				style="margin: 6rem 0 3rem; text-align: center; color: var(--text-dim); font-size: 0.85rem; letter-spacing: 0.1em; opacity: 0.4;"
+			>
+				&copy; 2024 URBANSCANIA CO. | ADVANCED GEOSPATIAL INTELLIGENCE
+				PLATFORM
+			</footer>
+		</main>
+
+		<script>
+			// Analysis Data Interface
+			interface AnalysisResult {
+				prediction: string;
+				confidence: number;
+				is_urbanized: boolean;
+				category: string;
+				description: string;
+				recommendation: string;
+				sustainability_index: number;
+				timestamp: string;
+			}
+
+			// DOM Elements
+			const fileInput = document.getElementById(
+				"file-input",
+			) as HTMLInputElement;
+			const dropZone = document.getElementById("drop-zone");
+			const imgPreview = document.getElementById(
+				"image-preview",
+			) as HTMLImageElement;
+			const filePreviewArea =
+				document.getElementById("file-preview-area");
+			const fileNameMeta = document.getElementById("file-name-meta");
+			const fileSizeMeta = document.getElementById("file-size-meta");
+			const analyzeTrigger = document.getElementById(
+				"analyze-trigger",
+			) as HTMLButtonElement;
+			const loadingArea = document.getElementById("loading-area");
+			const statusText = document.getElementById("status-text-live");
+			const resultsDashboard =
+				document.getElementById("results-dashboard");
+			const historyRoot = document.getElementById(
+				"analysis-history-root",
+			);
+			const progressIndicator = document.getElementById(
+				"progress-indicator",
+			) as unknown as SVGCircleElement;
+			const sustainabilityPercent = document.getElementById(
+				"sustainability-percent",
+			);
+			const metadataFooter = document.getElementById("metadata-footer");
+
+			// History Store
+			let sessionHistory: AnalysisResult[] = JSON.parse(
+				localStorage.getItem("urbanSessionHistory") || "[]",
+			);
+
+			const updateHistoryList = () => {
+				if (!historyRoot) return;
+				if (sessionHistory.length === 0) return;
+
+				historyRoot.innerHTML = sessionHistory
+					.map(
+						(item) => `
+                <div class="history-item-premium">
+                    <div class="history-thumb">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                    </div>
+                    <div style="flex: 1">
+                        <div style="font-weight: 700; font-size: 0.9rem; text-transform: capitalize; color: #fff;">${item.prediction}</div>
+                        <div style="font-size: 0.7rem; color: var(--text-dim);">${item.timestamp}</div>
+                    </div>
+                    <div style="font-size: 0.8rem; font-weight: 800; color: ${item.is_urbanized ? "var(--danger)" : "var(--success)"}">
+                        ${item.is_urbanized ? "URB" : "NAT"}
+                    </div>
+                </div>
+            `,
+					)
+					.join("");
+			};
+
+			// Initialize UI
+			updateHistoryList();
+
+			// Handle File Selection
+			dropZone?.addEventListener("click", () => fileInput?.click());
+
+			fileInput?.addEventListener("change", (e) => {
+				const target = e.target as HTMLInputElement;
+				const file = target.files ? target.files[0] : null;
+
+				if (file) {
+					const reader = new FileReader();
+					reader.onload = (re) => {
+						if (re.target && typeof re.target.result === "string") {
+							imgPreview.src = re.target.result;
+							if (filePreviewArea)
+								filePreviewArea.style.display = "block";
+							if (fileNameMeta)
+								fileNameMeta.innerText = file.name;
+							if (fileSizeMeta)
+								fileSizeMeta.innerText = `Dimensión: ${(file.size / 1024).toFixed(1)} KB`;
+
+							// Hide instructions
+							const inst = document.querySelector(
+								".drop-zone h2, .drop-zone p",
+							);
+							if (inst instanceof HTMLElement)
+								inst.style.opacity = "0.3";
+
+							resultsDashboard?.classList.remove("visible");
+						}
+					};
+					reader.readAsDataURL(file);
+				}
+			});
+
+			// Trigger Analysis
+			analyzeTrigger?.addEventListener("click", async () => {
+				const file = fileInput.files ? fileInput.files[0] : null;
+				if (!file) return;
+
+				// UI Reveal Loading
+				analyzeTrigger.disabled = true;
+				if (loadingArea) loadingArea.style.display = "block";
+				if (statusText)
+					statusText.innerText = "Extrayendo Capas Vectoriales...";
+				resultsDashboard?.classList.remove("visible");
+				if (metadataFooter) metadataFooter.style.display = "none";
+
+				const formData = new FormData();
+				formData.append("file", file);
+
+				try {
+					const response = await fetch(
+						"http://localhost:8000/analyze",
+						{
+							method: "POST",
+							body: formData,
+						},
+					);
+
+					const result = await response.json();
+
+					if (result.success) {
+						const data: AnalysisResult = result.data;
+
+						// Populate Results
+						const predEl =
+							document.getElementById("res-prediction-big");
+						if (predEl) predEl.innerText = data.prediction;
+
+						const confEl =
+							document.getElementById("res-confidence-val");
+						if (confEl) confEl.innerText = data.confidence + "%";
+
+						const catEl =
+							document.getElementById("res-category-lbl");
+						if (catEl) catEl.innerText = data.category;
+
+						const insEl =
+							document.getElementById("res-insight-txt");
+						if (insEl) insEl.innerText = data.description;
+
+						const recEl =
+							document.getElementById("res-recommend-txt");
+						if (recEl) recEl.innerText = data.recommendation;
+
+						const latencyEl =
+							document.getElementById("meta-latency");
+						if (latencyEl)
+							latencyEl.innerText = `LATENCIA: ${result.metadata.analysis_time_ms} MS`;
+
+						// Animate Sustainability Graph
+						if (sustainabilityPercent)
+							sustainabilityPercent.innerText =
+								data.sustainability_index + "%";
+						if (progressIndicator) {
+							const offset =
+								440 - (440 * data.sustainability_index) / 100;
+							progressIndicator.style.strokeDashoffset =
+								offset.toString();
+						}
+
+						// Reveal Dashboard
+						resultsDashboard?.classList.add("visible");
+						if (metadataFooter)
+							metadataFooter.style.display = "flex";
+						if (statusText)
+							statusText.innerText =
+								"Escaneo Completado Exitósamente";
+
+						// Update History
+						const historyItem = {
+							...data,
+							id: Date.now().toString(),
+						};
+						sessionHistory.unshift(historyItem);
+						localStorage.setItem(
+							"urbanSessionHistory",
+							JSON.stringify(sessionHistory),
+						);
+						updateHistoryList();
+					}
+				} catch (err) {
+					if (statusText)
+						statusText.innerText =
+							"Error Crítico: Servidor de Inferencia no Alcanzable";
+					console.error(err);
+				} finally {
+					analyzeTrigger.disabled = false;
+					setTimeout(() => {
+						if (loadingArea) loadingArea.style.display = "none";
+					}, 1000);
+				}
+			});
+
+			// Drop Zone Drag Effects
+			["dragenter", "dragover", "dragleave", "drop"].forEach((evt) => {
+				dropZone?.addEventListener(evt, (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+				});
+			});
+
+			dropZone?.addEventListener("dragover", () =>
+				dropZone.classList.add("dragging"),
+			);
+			dropZone?.addEventListener("dragleave", () =>
+				dropZone.classList.remove("dragging"),
+			);
+			dropZone?.addEventListener("drop", (e) => {
+				dropZone.classList.remove("dragging");
+				const files = e.dataTransfer?.files;
+				if (files && files.length > 0) {
+					fileInput.files = files;
+					fileInput.dispatchEvent(new Event("change"));
+				}
+			});
+		</script>
+	</body>
+</html>
